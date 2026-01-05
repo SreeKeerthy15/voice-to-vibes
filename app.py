@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+from asr.speech_to_text import speech_to_text
 
 # ---------- Configuration ----------
 AUDIO_FOLDER = "audio"
@@ -24,11 +25,31 @@ st.write(f"Selected Language: **{language}**")
 st.subheader("Record Your Voice")
 audio_file = st.audio_input("Click to record")
 
+# ------------------ IMPORTANT BLOCK ------------------
 if audio_file is not None:
     file_path = os.path.join(AUDIO_FOLDER, AUDIO_FILE)
 
+    # Save audio
     with open(file_path, "wb") as f:
         f.write(audio_file.getbuffer())
 
     st.success("Recording saved successfully!")
     st.audio(file_path)
+
+    # -------- PHASE 2 : ASR OUTPUT --------
+    st.subheader("Speech Recognition Output")
+
+    with st.spinner("Running speech recognition..."):
+        try:
+            transcript, detected_lang = speech_to_text(file_path, language)
+
+
+            st.write("📝 Transcript:")
+            st.write(transcript)
+
+            st.write("🌐 Detected Language:")
+            st.write(detected_lang)
+
+        except Exception as e:
+            st.error("Speech recognition failed")
+            st.exception(e)
