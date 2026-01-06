@@ -26,16 +26,37 @@ Indian regional languages.
 
 ---
 
+---
+
+## Phase 3: Intelligence Layer (Completed)
+
+### Features Implemented
+- Text-based intent detection using keyword rules
+- Emotion-aware clarification dialogue
+- Priority-based decision engine
+- Intelligent resolution between:
+  - Explicit user intent
+  - Detected emotion
+  - User preference (match vs uplift)
+
+### Decision Logic
+1. If explicit intent exists → intent-based recommendation
+2. Else if user chooses uplift → opposite emotion mapping
+3. Else → emotion-matching recommendation
+
+### Outcome
+The system can now reason like a human by combining
+what the user says, how they sound, and what they prefer.
+
+
 ## Technologies Used
 - Python
 - Streamlit
 - OpenAI Whisper
 - FFmpeg
+- Librosa
+- NumPy
+- GitHub
 
 ---
 
-## Upcoming Phases
-- Audio preprocessing & feature extraction
-- Emotion detection using CNN/LSTM
-- Emotion-aware music recommendation
-- Multilingual voice response

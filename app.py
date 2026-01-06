@@ -1,6 +1,10 @@
 import streamlit as st
 import os
 from asr.speech_to_text import speech_to_text
+from audio_processing.features import extract_features
+from emotion.predictor import predict_emotion
+from intent.detect_intent import detect_intent
+from decision.engine import decide_music_category
 
 # ---------- Configuration ----------
 AUDIO_FOLDER = "audio"
@@ -43,7 +47,6 @@ if audio_file is not None:
         try:
             transcript, detected_lang = speech_to_text(file_path, language)
 
-
             st.write("📝 Transcript:")
             st.write(transcript)
 
@@ -53,3 +56,54 @@ if audio_file is not None:
         except Exception as e:
             st.error("Speech recognition failed")
             st.exception(e)
+
+    # -------- PHASE 2 : AUDIO PREPROCESSING --------
+    st.subheader("Audio Feature Extraction")
+
+    mfcc, chroma, mel = extract_features(file_path)
+
+    st.write("MFCC shape:", mfcc.shape)
+    st.write("Chroma shape:", chroma.shape)
+    st.write("Mel Spectrogram shape:", mel.shape)
+
+    st.subheader("Emotion Detection")
+
+    emotion, confidence = predict_emotion(mfcc, chroma, mel)
+
+    st.write("Detected Emotion:", emotion)
+    st.write("Confidence Score:", confidence)
+
+    intent = detect_intent(transcript)
+
+    st.subheader("Intent Detection")
+
+    if intent:
+        st.write("Explicit Intent Detected:", intent)
+    else:
+        st.write("No explicit intent detected")
+
+    user_choice = None
+
+    if intent is None and confidence > 0.7 and emotion in ["Sad", "Neutral", "Calm"]:
+        st.subheader("Clarification")
+
+        st.write(
+            f"You sound {emotion.lower()}. "
+            "Do you want music that matches your mood "
+            "or music that uplifts you?"
+        )
+
+        user_choice = st.radio(
+            "Choose one:",
+            ("Match my mood", "Uplift me")
+        )
+
+    final_category = decide_music_category(
+        intent,
+        emotion,
+        user_choice
+    )
+
+    st.subheader("Final Music Decision")
+    st.write("Recommended Music Category:", final_category)
+
