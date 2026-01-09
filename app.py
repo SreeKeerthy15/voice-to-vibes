@@ -5,6 +5,8 @@ from audio_processing.features import extract_features
 from emotion.predictor import predict_emotion
 from intent.detect_intent import detect_intent
 from decision.engine import decide_music_category
+from recommender.recommend import recommend_songs
+from tts.speak import speak_response
 
 # ---------- Configuration ----------
 AUDIO_FOLDER = "audio"
@@ -107,3 +109,29 @@ if audio_file is not None:
     st.subheader("Final Music Decision")
     st.write("Recommended Music Category:", final_category)
 
+    st.subheader("🎶 Recommended Songs")
+
+    songs = recommend_songs(final_category)
+
+    if not songs:
+        st.write("No songs found for this category.")
+    else:
+        for song in songs:
+            st.write(f"**{song['title']}** — {song['artist']}")
+
+            preview = song.get("preview_url")
+            if isinstance(preview, str) and preview.strip() != "":
+                st.audio(preview)
+
+            col1, col2 = st.columns(2)
+            with col1:
+                st.button("👍 Like", key=f"like_{song['title']}")
+            with col2:
+                st.button("⏭ Skip", key=f"skip_{song['title']}")
+
+    response_text = f"I will play something {final_category.lower()} for you."
+
+    audio_response = speak_response(response_text, language)
+
+    st.subheader("🔊 Voice Response")
+    st.audio(audio_response)
