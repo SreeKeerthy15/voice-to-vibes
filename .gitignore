@@ -3,6 +3,9 @@ venv/
 
 # Audio recordings
 audio/*.wav
+temp_audio/
+*.wav
+*.mp3
 
 # Python cache
 __pycache__/

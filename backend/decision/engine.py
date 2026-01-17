@@ -1,9 +1,4 @@
-OPPOSITE_EMOTION_MAP = {
-    "Sad": "Energetic",
-    "Angry": "Calm",
-    "Calm": "Happy",
-    "Neutral": "Happy"
-}
+
 
 def decide_music_category(intent, emotion, user_choice):
     # Highest priority: explicit intent
@@ -12,7 +7,11 @@ def decide_music_category(intent, emotion, user_choice):
 
     # Second priority: uplift choice
     if user_choice == "Uplift me":
-        return OPPOSITE_EMOTION_MAP.get(emotion, "Happy")
+        return "Happy"
+    
+    if user_choice == "Match my mood":
+        return emotion
+
 
     # Default: match emotion
     return emotion

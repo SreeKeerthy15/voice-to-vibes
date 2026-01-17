@@ -42,6 +42,11 @@ if audio_file is not None:
     st.success("Recording saved successfully!")
     st.audio(file_path)
 
+    # Initialize ASR outputs safely
+    transcript = None
+    detected_lang = None
+
+
     # -------- PHASE 2 : ASR OUTPUT --------
     st.subheader("Speech Recognition Output")
 
@@ -59,6 +64,7 @@ if audio_file is not None:
             st.error("Speech recognition failed")
             st.exception(e)
 
+
     # -------- PHASE 2 : AUDIO PREPROCESSING --------
     st.subheader("Audio Feature Extraction")
 
@@ -75,7 +81,12 @@ if audio_file is not None:
     st.write("Detected Emotion:", emotion)
     st.write("Confidence Score:", confidence)
 
-    intent = detect_intent(transcript)
+        # -------- SAFE INTENT DETECTION --------
+    if transcript:
+        intent = detect_intent(transcript)
+    else:
+        intent = None
+
 
     st.subheader("Intent Detection")
 
