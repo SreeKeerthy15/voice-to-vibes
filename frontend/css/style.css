@@ -1,0 +1,114 @@
+body {
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  color: #e5e7eb;
+  padding-top: 80px;
+  font-family: system-ui, sans-serif;
+}
+
+/* NAVBAR */
+.glass-nav {
+  backdrop-filter: blur(12px);
+  background: rgba(2, 6, 23, 0.75);
+}
+
+/* HERO */
+.hero-section {
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.hero-subtitle {
+  color: #9ca3af;
+  max-width: 420px;
+}
+
+.hero-illustration {
+  max-width: 90%;
+  opacity: 0.9;
+}
+
+/* LANGUAGE */
+.lang-select {
+  max-width: 120px;
+  background: #020617;
+  color: white;
+  border: 1px solid #1f2937;
+}
+
+/* WAVEFORM */
+.waveform {
+  display: flex;
+  gap: 6px;
+}
+
+.waveform span {
+  width: 6px;
+  height: 14px;
+  background: #22c55e;
+  animation: wave 1s infinite ease-in-out;
+}
+
+.waveform span:nth-child(2) { animation-delay: .1s }
+.waveform span:nth-child(3) { animation-delay: .2s }
+.waveform span:nth-child(4) { animation-delay: .3s }
+.waveform span:nth-child(5) { animation-delay: .4s }
+
+@keyframes wave {
+  0%,100% { height: 10px }
+  50% { height: 28px }
+}
+
+.hidden { display: none }
+
+/* CARDS */
+.analysis-card {
+  background: linear-gradient(145deg, #020617, #0f172a);
+  border: 1px solid #1f2937;
+  border-radius: 16px;
+  padding: 20px;
+  transition: transform .3s ease;
+}
+
+.analysis-card:hover {
+  transform: translateY(-6px);
+}
+
+/* EMOTION RING */
+.emotion-ring {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 6px solid #22c55e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px auto;
+}
+
+/* BADGES */
+.badge-pill {
+  background: #1f2937;
+  padding: 6px 12px;
+  border-radius: 999px;
+  margin: 4px;
+  display: inline-block;
+}
+
+/* SONG CARD */
+.song-card {
+  background: #020617;
+  border: 1px solid #1f2937;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.song-card img {
+  width: 100%;
+  border-radius: 12px;
+}

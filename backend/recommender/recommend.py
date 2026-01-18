@@ -1,25 +1,29 @@
-import pandas as pd
 import random
-import os
 
-BASE_DIR = os.path.dirname(__file__)           # backend/recommender
-MUSIC_PATH = os.path.join(
-    BASE_DIR,
-    "..", "music", "songs.csv"
-)
+# Dummy safe song database
+SONG_DB = {
+    "Happy": [
+        {"title": "Happy Vibes", "artist": "Artist A"},
+        {"title": "Sunshine Mood", "artist": "Artist B"}
+    ],
+    "Sad": [
+        {"title": "Blue Nights", "artist": "Artist C"},
+        {"title": "Silent Tears", "artist": "Artist D"}
+    ],
+    "Angry": [
+        {"title": "Fire Mode", "artist": "Artist E"},
+        {"title": "Rage Beats", "artist": "Artist F"}
+    ],
+    "Calm": [
+        {"title": "Peaceful Flow", "artist": "Artist G"},
+        {"title": "Soft Waves", "artist": "Artist H"}
+    ],
+    "Neutral": [
+        {"title": "Easy Listening", "artist": "Artist I"},
+        {"title": "Daily Chill", "artist": "Artist J"}
+    ]
+}
 
-def recommend_songs(category, top_k=3):
-    df = pd.read_csv(MUSIC_PATH)
-
-    # Filter by emotion/category
-    filtered = df[df["emotion"].str.lower() == category.lower()]
-
-    if filtered.empty:
-        return []
-
-    # Randomize & pick top_k
-    recommendations = filtered.sample(
-        min(top_k, len(filtered))
-    )
-
-    return recommendations.to_dict(orient="records")
+def recommend_songs(category):
+    songs = SONG_DB.get(category, SONG_DB["Neutral"])
+    return random.sample(songs, min(2, len(songs)))

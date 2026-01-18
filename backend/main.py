@@ -1,22 +1,18 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 import shutil
 import os
-import traceback
 
-# -------- Import internal modules (backend package) --------
 from backend.asr.speech_to_text import speech_to_text
 from backend.audio_processing.features import extract_features
 from backend.emotion.predictor import predict_emotion
 from backend.intent.detect_intent import detect_intent
 from backend.decision.engine import decide_music_category
 from backend.recommender.recommend import recommend_songs
-from backend.tts.speak import speak_response
 
-# -------- App initialization --------
 app = FastAPI(title="Voice to Vibes API")
 
-# Allow frontend (React later) to talk to backend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -25,68 +21,57 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# -------- Audio storage --------
-AUDIO_DIR = "temp_audio"
+# 🚨 MOVE TEMP AUDIO OUTSIDE PROJECT FOLDER
+AUDIO_DIR = os.path.join(os.path.expanduser("~"), "voice_to_vibes_audio")
 os.makedirs(AUDIO_DIR, exist_ok=True)
 
-# -------- Health check (optional but recommended) --------
 @app.get("/")
 def root():
     return {"status": "Voice to Vibes backend running"}
 
-# -------- Core API --------
 @app.post("/analyze")
 async def analyze_audio(
     audio: UploadFile = File(...),
     preferred_language: str = "English"
 ):
-    
-        # Always use a fixed filename (Swagger-safe, Whisper-safe)
+    try:
         file_path = os.path.join(AUDIO_DIR, "input.wav")
 
-        # Save uploaded audio
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(audio.file, buffer)
 
-        # Debug safety logs
-        print("Saved audio to:", file_path)
-        print("File size (bytes):", os.path.getsize(file_path))
+        # 🔤 Speech processing
+        speech_data = speech_to_text(file_path, preferred_language)
 
-        if os.path.getsize(file_path) == 0:
-            raise ValueError("Uploaded audio file is empty")
+        original_text = speech_data["original_text"]
+        translated_text = speech_data["translated_text"]
+        language = speech_data["language"]
 
-        # 1️⃣ Speech to text
-        transcript, detected_lang = speech_to_text(
-            file_path,
-            preferred_language
-        )
-
-        # 2️⃣ Audio features
+        # 🎵 Audio features
         mfcc, chroma, mel = extract_features(file_path)
 
-        # 3️⃣ Emotion detection
-        emotion, confidence = predict_emotion(
-            mfcc,
-            chroma,
-            mel
-        )
+        # 🧠 Emotion uses ENGLISH meaning
+        emotion, confidence = predict_emotion(mfcc, chroma, mel)
 
-        # 4️⃣ Intent detection
-        intent = detect_intent(transcript) if transcript else None
+        emotion = str(emotion) if emotion else "Unknown"
+        confidence = float(confidence) if confidence else 0.0
 
-        # 5️⃣ Decision engine
+        # 🎯 Intent detection on English text
+        intent = detect_intent(translated_text) if translated_text else None
+
         final_category = decide_music_category(
             intent=intent,
             emotion=emotion,
             user_choice=None
         )
 
-        # 6️⃣ Song recommendation
-        songs = recommend_songs(final_category)
+        from backend.music.itunes_client import search_songs_by_emotion
+        songs = search_songs_by_emotion(final_category)
 
-        return {
-            "transcript": transcript,
-            "detected_language": detected_lang,
+        response = {
+            "transcript_original": original_text,
+            "transcript_english": translated_text,
+            "language": language,
             "emotion": emotion,
             "confidence": confidence,
             "intent": intent,
@@ -94,4 +79,10 @@ async def analyze_audio(
             "songs": songs
         }
 
+        return JSONResponse(content=response)
 
+    except Exception as e:
+        return JSONResponse(
+            content={"error": "Audio analysis failed", "details": str(e)},
+            status_code=500
+        )
