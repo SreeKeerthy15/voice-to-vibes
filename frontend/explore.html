@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Explore | Voice to Vibes</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg glass-nav fixed-top">
+  <div class="container">
+    <a class="navbar-brand text-success fw-bold" href="index.html">Voice to Vibes</a>
+    <div class="ms-auto d-flex gap-4">
+      <a class="nav-link text-light" href="index.html">Home</a>
+      <a class="nav-link text-light active" href="explore.html">Explore</a>
+      <a class="nav-link text-light" href="about.html">About</a>
+    </div>
+  </div>
+</nav>
+
+<!-- EXPLORE HEADER -->
+<section class="container explore-header">
+  <h1 class="hero-title">Explore by Mood</h1>
+  <p class="hero-subtitle">Choose a vibe. Discover music instantly.</p>
+</section>
+
+<!-- MOOD CARDS -->
+<section class="container mt-4">
+  <div class="row g-4">
+
+    <div class="col-md-4">
+      <div class="mood-card mood-happy" onclick="loadMood('Happy')">
+        <img src="assets/moods/happy.jpg" />
+        <h4>Happy</h4>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="mood-card mood-sad" onclick="loadMood('Sad')">
+        <img src="assets/moods/sad.jpg" />
+        <h4>Sad</h4>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="mood-card mood-calm" onclick="loadMood('Calm')">
+        <img src="assets/moods/calm.jpg" />
+        <h4>Calm</h4>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="mood-card mood-energetic" onclick="loadMood('Energetic')">
+        <img src="assets/moods/energetic.jpg" />
+        <h4>Energetic</h4>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="mood-card mood-romantic" onclick="loadMood('Romantic')">
+        <img src="assets/moods/romantic.jpg" />
+        <h4>Romantic</h4>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="mood-card mood-focus" onclick="loadMood('Focus')">
+        <img src="assets/moods/focus.jpg" />
+        <h4>Focus</h4>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PLAYER -->
+<section class="container mt-5">
+  <h3 class="section-title">Now Playing</h3>
+  <div id="songCards" class="row justify-content-center"></div>
+</section>
+
+<script src="js/explore.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

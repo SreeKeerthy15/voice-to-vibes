@@ -18,6 +18,12 @@ body {
   align-items: center;
 }
 
+.hero-section .row {
+  width: 100%;
+}
+
+
+
 .hero-title {
   font-size: 3rem;
   font-weight: 700;
@@ -175,5 +181,102 @@ body {
   font-weight: 600;       /* bold but clean */
   font-size: 0.95rem;
   margin-bottom: 12px;
+}
+
+/* ================= EXPLORE PAGE ================= */
+
+.explore-header {
+  margin-top: 120px;
+  text-align: center;
+}
+
+.mood-card {
+  height: 360px;
+  border-radius: 24px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: transform 0.35s ease;
+}
+
+.mood-card:hover {
+  transform: translateY(-10px);
+}
+
+.mood-card img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 16px;
+  transform: translate(-50%, -60%);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.mood-card h4 {
+  position: relative;
+  z-index: 2;
+  color: white;
+  font-weight: 700;
+}
+
+/* Mood Gradients */
+.mood-happy { background: linear-gradient(135deg,#facc15,#f97316); }
+.mood-sad { background: linear-gradient(135deg,#3b82f6,#1e3a8a); }
+.mood-calm { background: linear-gradient(135deg,#22c55e,#064e3b); }
+.mood-energetic { background: linear-gradient(135deg,#ef4444,#7f1d1d); }
+.mood-romantic { background: linear-gradient(135deg,#ec4899,#831843); }
+.mood-focus { background: linear-gradient(135deg,#6366f1,#312e81); }
+
+/* ABOUT PAGE */
+.about-illustration {
+  max-width: 80%;
+  opacity: 0.9;
+  animation: float 6s ease-in-out infinite;
+}
+
+/* FLOATING ILLUSTRATION */
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+/* FADE IN */
+.fade-in {
+  animation: fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* SLIDE UP */
+.slide-up {
+  animation: slideUp 0.9s ease forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 

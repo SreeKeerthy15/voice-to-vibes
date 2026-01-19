@@ -93,3 +93,9 @@ async def analyze_audio(
             },
             status_code=500
         )
+
+@app.get("/explore")
+def explore(category: str):
+    from backend.recommender.recommend import recommend_songs
+    songs = recommend_songs(category)
+    return {"songs": songs}
