@@ -21,7 +21,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 🚨 MOVE TEMP AUDIO OUTSIDE PROJECT FOLDER
+# Store temp audio outside repo
 AUDIO_DIR = os.path.join(os.path.expanduser("~"), "voice_to_vibes_audio")
 os.makedirs(AUDIO_DIR, exist_ok=True)
 
@@ -32,46 +32,50 @@ def root():
 @app.post("/analyze")
 async def analyze_audio(
     audio: UploadFile = File(...),
-    preferred_language: str = "English"
+    preferred_language: str = "English"  # English | Hindi | Telugu
 ):
     try:
+        # ---------- SAVE AUDIO ----------
         file_path = os.path.join(AUDIO_DIR, "input.wav")
-
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(audio.file, buffer)
 
-        # 🔤 Speech processing
+        # ---------- ASR ----------
         speech_data = speech_to_text(file_path, preferred_language)
 
-        original_text = speech_data["original_text"]
-        translated_text = speech_data["translated_text"]
-        language = speech_data["language"]
+        original_text = speech_data.get("original_text", "")
+        translated_text = speech_data.get("translated_text", "")
+        language = speech_data.get("language", "EN")
 
-        # 🎵 Audio features
+        # ---------- AUDIO FEATURES ----------
         mfcc, chroma, mel = extract_features(file_path)
 
-        # 🧠 Emotion uses ENGLISH meaning
+        # ---------- EMOTION ----------
         emotion, confidence = predict_emotion(mfcc, chroma, mel)
 
         emotion = str(emotion) if emotion else "Unknown"
         confidence = float(confidence) if confidence else 0.0
 
-        # 🎯 Intent detection on English text
+        # ---------- INTENT (ALWAYS ON ENGLISH) ----------
         intent = detect_intent(translated_text) if translated_text else None
 
+        # ---------- DECISION ----------
         final_category = decide_music_category(
             intent=intent,
             emotion=emotion,
             user_choice=None
         )
 
+        # ---------- MUSIC (iTunes) ----------
         from backend.music.itunes_client import search_songs_by_emotion
         songs = search_songs_by_emotion(final_category)
 
+
+        # ---------- RESPONSE ----------
         response = {
             "transcript_original": original_text,
             "transcript_english": translated_text,
-            "language": language,
+            "language": language,          # EN / HI / TE
             "emotion": emotion,
             "confidence": confidence,
             "intent": intent,
@@ -83,6 +87,9 @@ async def analyze_audio(
 
     except Exception as e:
         return JSONResponse(
-            content={"error": "Audio analysis failed", "details": str(e)},
+            content={
+                "error": "Audio analysis failed",
+                "details": str(e)
+            },
             status_code=500
         )

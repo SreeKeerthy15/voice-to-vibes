@@ -25,10 +25,10 @@
 <nav class="navbar navbar-expand-lg glass-nav fixed-top">
   <div class="container">
     <a class="navbar-brand text-success fw-bold" href="#">Voice to Vibes</a>
-    <div class="ms-auto">
-      <a class="nav-link d-inline text-light" href="index.html">Home</a>
-      <a class="nav-link d-inline text-light" href="explore.html">Explore</a>
-      <a class="nav-link d-inline text-light" href="about.html">About</a>
+    <div class="ms-auto d-flex align-items-center">
+      <a class="nav-link text-light" href="index.html" >Home</a>
+      <a class="nav-link text-light ms-4" href="explore.html">Explore</a>
+      <a class="nav-link text-light ms-4" href="about.html">About</a>
     </div>
   </div>
 </nav>
@@ -45,26 +45,68 @@
       </p>
 
       <div class="d-flex gap-3 align-items-center">
-        <select id="language" class="form-select lang-select">
-          <option value="English">English</option>
-          <option value="Hindi">Hindi</option>
-        </select>
+        <!-- Language Dropdown -->
+        <div class="dropdown">
+          <button
+            class="vibe-btn dropdown-toggle"
+            type="button"
+            id="languageDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Select Language
+          </button>
 
-        <button id="recordBtn" class="btn btn-success px-4">
-          <i class="bi bi-mic-fill"></i> Speak Now
+          <ul class="dropdown-menu dark-dropdown">
+            <li>
+              <a class="dropdown-item" href="#" onclick="setLanguage('English')">
+                English
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" onclick="setLanguage('Hindi')">
+                Hindi
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" onclick="setLanguage('Telugu')">Telugu</a>
+            </li>
+
+          </ul>
+        </div>
+
+        <!-- Speak Now -->
+        <button id="recordBtn" class="vibe-btn vibe-btn-lg">
+          <i class="bi bi-mic-fill"></i>
+          Speak Now
         </button>
 
-        <button id="uploadBtn" class="btn btn-outline-light px-4">
-          <i class="bi bi-upload"></i> Upload
+        <!-- Upload -->
+        <button id="uploadBtn" class="vibe-btn">
+          <i class="bi bi-upload"></i>
+          Upload
         </button>
 
         <input type="file" id="audioFile" hidden />
       </div>
 
-      <!-- Waveform -->
-      <div id="waveform" class="waveform hidden mt-4">
-        <span></span><span></span><span></span><span></span><span></span>
-      </div>
+            <!-- Hidden select (used by backend logic, NOT visible in UI) -->
+      <select id="language" hidden>
+        <option value="English">English</option>
+        <option value="Hindi">Hindi</option>
+        <option value="Telugu">Telugu</option>
+
+      </select>
+
+
+            <!-- Live Waveform -->
+      <canvas
+        id="waveformCanvas"
+        width="320"
+        height="80"
+        class="waveform-canvas hidden mt-4">
+      </canvas>
+
     </div>
 
     <div class="col-md-6 text-center">
@@ -118,5 +160,7 @@
 </section>
 
 <script src="js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
